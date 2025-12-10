@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Lectas - Laboratorio de Formatos</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --accent: #ff9f1c;
+      --accent-soft: #ffe3c2;
+      --text-main: #131820;
+      --text-soft: #5c6475;
+      --card-bg: #ffffff;
+      --nav-bg: #ffffff;
+      --shadow-soft: 0 10px 25px rgba(0, 0, 0, 0.08);
+      --radius-lg: 24px;
+      --radius-md: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Helvetica Neue", Arial, sans-serif;
+    }
+
+    body {
+      background: radial-gradient(circle at top left, #fffaf3, var(--bg) 45%);
+      color: var(--text-main);
+      min-height: 100vh;
+    }
+
+    .app {
+      max-width: 480px;
+      margin: 0 auto;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    header {
+      padding: 16px 20px 8px;
+    }
+
+    .app-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 1.2rem;
+    }
+
+    .app-logo {
+      width: 30px;
+      height: 30px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent), #ff5e3a);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-weight: 900;
+      font-size: 1rem;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .app-subtitle {
+      padding: 0 20px 12px;
+      font-size: 0.85rem;
+      color: var(--text-soft);
+    }
+
+    main {
+      flex: 1;
+      padding: 0 16px 80px; /* espacio para el menú inferior */
+      overflow-y: auto;
+    }
+
+    .screen {
+      display: none;
+      animation: fadeIn 0.25s ease-out;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    .screen-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 12px;
+      padding: 4px 4px 0;
+    }
+
+    .screen-title {
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .screen-ratio-label {
+      font-size: 0.8rem;
+      color: var(--text-soft);
+    }
+
+    .hint {
+      font-size: 0.78rem;
+      color: var(--text-soft);
+      margin-bottom: 10px;
+      padding: 0 4px;
+    }
+
+    /* Tarjeta con contenido estilo Duolingo */
+    .lesson-card {
+      width: 100%;
+      max-width: 420px;
+      margin: 0 auto 24px;
+      border-radius: var(--radius-lg);
+      background: var(--card-bg);
+      box-shadow: var(--shadow-soft);
+      padding: 14px 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .lesson-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-soft);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--accent);
+    }
+
+    .lesson-question {
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .lesson-sub {
+      font-size: 0.8rem;
+      color: var(--text-soft);
+    }
+
+    .answers {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .answer-pill {
+      border-radius: 999px;
+      border: 1.5px solid #dde2f1;
+      padding: 8px 10px;
+      font-size: 0.8rem;
+      background: #f9fbff;
+      text-align: center;
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.06s ease, box-shadow 0.06s ease, border 0.06s ease,
+        background 0.06s ease;
+    }
+
+    .answer-pill:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+    }
+
+    .answer-pill.correct {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    /* Caja que representa la relación de aspecto */
+    .ratio-wrapper {
+      width: 100%;
+      max-width: 420px;
+      margin: 0 auto;
+      border-radius: var(--radius-lg);
+      background: rgba(0, 0, 0, 0.04);
+      padding: 10px;
+    }
+
+    .ratio-box {
+      width: 100%;
+      border-radius: var(--radius-md);
+      padding: 10px;
+      color: #123;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      font-size: 0.8rem;
+    }
+
+    /* Cada color/ratio para ver cuánto abarca en pantalla */
+    .ratio-16-9 {
+      aspect-ratio: 16 / 9;
+      background: #c3f0ca;
+    }
+
+    .ratio-1-1 {
+      aspect-ratio: 1 / 1;
+      background: #c2e7ff;
+    }
+
+    .ratio-4-5 {
+      aspect-ratio: 4 / 5;
+      background: #ffe3c2;
+    }
+
+    .ratio-2-3 {
+      aspect-ratio: 2 / 3;
+      background: #f5cff6;
+    }
+
+    .ratio-9-16 {
+      aspect-ratio: 9 / 16;
+      background: #fddede;
+    }
+
+    .ratio-caption {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .ratio-meta {
+      font-size: 0.75rem;
+      opacity: 0.8;
+    }
+
+    /* Menú inferior */
+    .bottom-nav {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 10;
+      padding: 8px 12px 14px;
+      background: transparent;
+      pointer-events: none; /* para que solo el contenedor interno reciba clics */
+    }
+
+    .bottom-nav-inner {
+      pointer-events: auto;
+      max-width: 480px;
+      margin: 0 auto;
+      border-radius: 999px;
+      background: var(--nav-bg);
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      justify-content: space-between;
+      padding: 4px;
+      gap: 4px;
+    }
+
+    .nav-btn {
+      flex: 1;
+      border-radius: 999px;
+      border: none;
+      background: transparent;
+      font-size: 0.8rem;
+      padding: 8px 0;
+      cursor: pointer;
+      color: var(--text-soft);
+      font-weight: 600;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    .nav-btn.active {
+      background: var(--accent-soft);
+      color: var(--text-main);
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(4px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (min-width: 768px) {
+      main {
+        padding-top: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="app-title">
+        <div class="app-logo">L</div>
+        <span>Lectas · Formatos de lección</span>
+      </div>
+      <p class="app-subtitle">
+        Toca los botones de abajo para ver cómo se siente cada relación de aspecto
+        dentro de una lección estilo Duolingo.
+      </p>
+    </header>
+
+    <main>
+      <!-- 16:9 -->
+      <section class="screen active" data-screen="16-9">
+        <div class="screen-header">
+          <div class="screen-title">Formato 16:9</div>
+          <div class="screen-ratio-label">Pantalla tipo video horizontal</div>
+        </div>
+        <p class="hint">
+          El div verde usa relación 16:9. En móvil suele recordar a un video de
+          YouTube a pantalla completa.
+        </p>
+
+        <div class="lesson-card">
+          <div class="lesson-header">
+            <div class="dot"></div>
+            <span>Mini lección</span>
+          </div>
+          <div class="lesson-question">
+            ¿Cuál de estas opciones representa mejor un video explicativo rápido?
+          </div>
+          <div class="lesson-sub">Piensa en cómo se ve en el teléfono.</div>
+          <div class="answers">
+            <div class="answer-pill correct">Una caja 16:9 como esta</div>
+            <div class="answer-pill">Un cuadro 1:1</div>
+            <div class="answer-pill">Una tira muy alta 9:16</div>
+            <div class="answer-pill">Un fragmento 4:5</div>
+          </div>
+        </div>
+
+        <div class="ratio-wrapper">
+          <div class="ratio-box ratio-16-9">
+            <div>
+              <div class="ratio-caption">Área de contenido 16:9</div>
+              <div class="ratio-meta">
+                Ocupa poco alto y mucho ancho. Perfecto para demostraciones o
+                animaciones breves dentro de una lección.
+              </div>
+            </div>
+            <div class="ratio-meta">
+              Anchura: 100% · Altura ≈ 56% del ancho
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 1:1 -->
+      <section class="screen" data-screen="1-1">
+        <div class="screen-header">
+          <div class="screen-title">Formato 1:1</div>
+          <div class="screen-ratio-label">Cuadrado</div>
+        </div>
+        <p class="hint">
+          El div azul muestra un cuadro perfecto. Útil para ejercicios muy
+          contenidos o ilustraciones centrales.
+        </p>
+
+        <div class="lesson-card">
+          <div class="lesson-header">
+            <div class="dot"></div>
+            <span>Comparación visual</span>
+          </div>
+          <div class="lesson-question">
+            ¿Qué formato sería más cómodo para mostrar un ícono o gráfico simple?
+          </div>
+          <div class="lesson-sub">
+            Imagina una figura geométrica que debe verse igual en todas las
+            direcciones.
+          </div>
+          <div class="answers">
+            <div class="answer-pill">16:9</div>
+            <div class="answer-pill correct">1:1 cuadrado</div>
+            <div class="answer-pill">9:16</div>
+            <div class="answer-pill">2:3</div>
+          </div>
+        </div>
+
+        <div class="ratio-wrapper">
+          <div class="ratio-box ratio-1-1">
+            <div>
+              <div class="ratio-caption">Área de contenido 1:1</div>
+              <div class="ratio-meta">
+                Se siente estable y centrado. No domina la pantalla verticalmente,
+                pero sigue siendo protagonista.
+              </div>
+            </div>
+            <div class="ratio-meta">
+              Anchura: 100% · Altura = 100% del ancho
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4:5 -->
+      <section class="screen" data-screen="4-5">
+        <div class="screen-header">
+          <div class="screen-title">Formato 4:5</div>
+          <div class="screen-ratio-label">Vertical recomendado</div>
+        </div>
+        <p class="hint">
+          El div naranja 4:5 es una vertical “cómoda”: ocupa buena parte del alto,
+          pero deja respirar la interfaz.
+        </p>
+
+        <div class="lesson-card">
+          <div class="lesson-header">
+            <div class="dot"></div>
+            <span>Lectas recomienda</span>
+          </div>
+          <div class="lesson-question">
+            Este es un buen candidato para las tarjetas de lección principales.
+          </div>
+          <div class="lesson-sub">
+            Permite título, problema, opciones y quizá una pista, sin obligar a
+            hacer scroll.
+          </div>
+          <div class="answers">
+            <div class="answer-pill correct">Usar 4:5 como base</div>
+            <div class="answer-pill">Usar siempre 16:9</div>
+            <div class="answer-pill">Usar solo 1:1</div>
+            <div class="answer-pill">Usar siempre 9:16</div>
+          </div>
+        </div>
+
+        <div class="ratio-wrapper">
+          <div class="ratio-box ratio-4-5">
+            <div>
+              <div class="ratio-caption">Área de contenido 4:5</div>
+              <div class="ratio-meta">
+                Parecida a una tarjeta vertical de ejercicio. Equilibrio entre
+                presencia y espacio libre para otros elementos de la UI.
+              </div>
+            </div>
+            <div class="ratio-meta">
+              Anchura: 100% · Altura = 125% del ancho
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2:3 -->
+      <section class="screen" data-screen="2-3">
+        <div class="screen-header">
+          <div class="screen-title">Formato 2:3</div>
+          <div class="screen-ratio-label">Vertical intermedio</div>
+        </div>
+        <p class="hint">
+          El div morado 2:3 es algo más esbelto que 4:5. Útil si quieres mostrar
+          contexto adicional debajo.
+        </p>
+
+        <div class="lesson-card">
+          <div class="lesson-header">
+            <div class="dot"></div>
+            <span>Escala vertical</span>
+          </div>
+          <div class="lesson-question">
+            ¿Cuándo podría ser útil un bloque 2:3 en lugar de 4:5?
+          </div>
+          <div class="lesson-sub">
+            Piensa en escenarios donde después del contenido principal hay un
+            botón o un mensaje de retroalimentación.
+          </div>
+          <div class="answers">
+            <div class="answer-pill correct">
+              Cuando quiero más espacio libre abajo
+            </div>
+            <div class="answer-pill">Nunca, siempre 16:9</div>
+            <div class="answer-pill">Solo para videos</div>
+            <div class="answer-pill">Solo en modo escritorio</div>
+          </div>
+        </div>
+
+        <div class="ratio-wrapper">
+          <div class="ratio-box ratio-2-3">
+            <div>
+              <div class="ratio-caption">Área de contenido 2:3</div>
+              <div class="ratio-meta">
+                Es vertical pero no domina tanto como 9:16. Puedes combinarlo con
+                mensajes, barras de progreso o botones fuera del área.
+              </div>
+            </div>
+            <div class="ratio-meta">
+              Anchura: 100% · Altura = 150% del ancho
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 9:16 -->
+      <section class="screen" data-screen="9-16">
+        <div class="screen-header">
+          <div class="screen-title">Formato 9:16</div>
+          <div class="screen-ratio-label">Vertical completo</div>
+        </div>
+        <p class="hint">
+          El div rosa casi ocupa toda la pantalla. Sirve para experiencias
+          inmersivas, pero deja poco espacio para UI adicional.
+        </p>
+
+        <div class="lesson-card">
+          <div class="lesson-header">
+            <div class="dot"></div>
+            <span>Modo inmersivo</span>
+          </div>
+          <div class="lesson-question">
+            Este tamaño se siente como una “historia” de redes sociales. ¿Lo usarías
+            para todas las lecciones?
+          </div>
+          <div class="lesson-sub">
+            Úsalo solo cuando tenga sentido que el contenido absorba casi toda la
+            pantalla.
+          </div>
+          <div class="answers">
+            <div class="answer-pill">Sí, en todas</div>
+            <div class="answer-pill correct">
+              No, solo en ejercicios especiales
+            </div>
+            <div class="answer-pill">Solo para texto</div>
+            <div class="answer-pill">Solo para botones</div>
+          </div>
+        </div>
+
+        <div class="ratio-wrapper">
+          <div class="ratio-box ratio-9-16">
+            <div>
+              <div class="ratio-caption">Área de contenido 9:16</div>
+              <div class="ratio-meta">
+                Muy alta. Ideal para animaciones o visualizaciones que ocupan casi
+                toda la vista, pero exige que el resto de la interfaz se adapte.
+              </div>
+            </div>
+            <div class="ratio-meta">
+              Anchura: 100% · Altura ≈ 178% del ancho
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Menú inferior -->
+    <div class="bottom-nav">
+      <div class="bottom-nav-inner">
+        <button class="nav-btn active" data-target="16-9">16:9</button>
+        <button class="nav-btn" data-target="1-1">1:1</button>
+        <button class="nav-btn" data-target="4-5">4:5</button>
+        <button class="nav-btn" data-target="2-3">2:3</button>
+        <button class="nav-btn" data-target="9-16">9:16</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const navButtons = document.querySelectorAll(".nav-btn");
+    const screens = document.querySelectorAll(".screen");
+
+    navButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const target = btn.getAttribute("data-target");
+
+        // activar botón
+        navButtons.forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        // mostrar pantalla correspondiente
+        screens.forEach((screen) => {
+          screen.classList.toggle(
+            "active",
+            screen.getAttribute("data-screen") === target
+          );
+        });
+      });
+    });
+  </script>
+</body>
+</html>
