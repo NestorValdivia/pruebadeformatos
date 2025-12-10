@@ -33,8 +33,9 @@
     }
 
     .app {
-      max-width: 480px;
-      margin: 0 auto;
+      width: 100%;
+      max-width: none;
+      margin: 0;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -75,7 +76,7 @@
 
     main {
       flex: 1;
-      padding: 0 16px 80px; /* espacio para el menú inferior */
+      padding: 0 0 80px; /* espacio para el menú inferior */
       overflow-y: auto;
     }
 
@@ -116,8 +117,8 @@
     /* Tarjeta con contenido estilo Duolingo */
     .lesson-card {
       width: 100%;
-      max-width: 420px;
-      margin: 0 auto 24px;
+      max-width: none;
+      margin: 0 0 24px;
       border-radius: var(--radius-lg);
       background: var(--card-bg);
       box-shadow: var(--shadow-soft);
@@ -188,11 +189,11 @@
     /* Caja que representa la relación de aspecto */
     .ratio-wrapper {
       width: 100%;
-      max-width: 420px;
-      margin: 0 auto;
+      max-width: none;
+      margin: 0;
       border-radius: var(--radius-lg);
       background: rgba(0, 0, 0, 0.04);
-      padding: 10px;
+      padding: 10px 0;
     }
 
     .ratio-box {
