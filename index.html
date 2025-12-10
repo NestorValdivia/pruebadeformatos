@@ -223,6 +223,11 @@
       background: #ffe3c2;
     }
 
+    .ratio-3-4 {
+      aspect-ratio: 3 / 4;
+      background: #e0d8ff;
+    }
+
     .ratio-2-3 {
       aspect-ratio: 2 / 3;
       background: #f5cff6;
@@ -456,6 +461,56 @@
         </div>
       </section>
 
+      <!-- 3:4 -->
+      <section class="screen" data-screen="3-4">
+        <div class="screen-header">
+          <div class="screen-title">Formato 3:4</div>
+          <div class="screen-ratio-label">Intermedio vertical</div>
+        </div>
+        <p class="hint">
+          El div violeta claro 3:4 es un punto medio entre 4:5 y 2:3. Te da altura
+          para más detalle sin volverse tan esbelto.
+        </p>
+
+        <div class="lesson-card">
+          <div class="lesson-header">
+            <div class="dot"></div>
+            <span>Balance vertical</span>
+          </div>
+          <div class="lesson-question">
+            ¿Cuándo elegir 3:4 frente a 4:5?
+          </div>
+          <div class="lesson-sub">
+            Piensa en casos donde necesitas más alto que 4:5 pero no tan
+            estrecho como 2:3, por ejemplo para mostrar un gráfico con pie de
+            texto.
+          </div>
+          <div class="answers">
+            <div class="answer-pill correct">
+              Cuando requiero un intermedio entre 4:5 y 2:3
+            </div>
+            <div class="answer-pill">Siempre prefiero 4:5</div>
+            <div class="answer-pill">Solo usaría 9:16</div>
+            <div class="answer-pill">Jamás usaría intermedios</div>
+          </div>
+        </div>
+
+        <div class="ratio-wrapper">
+          <div class="ratio-box ratio-3-4">
+            <div>
+              <div class="ratio-caption">Área de contenido 3:4</div>
+              <div class="ratio-meta">
+                Más alto que 4:5, pero sin ocupar tanto como 2:3. Adecuado para
+                ejercicios con imagen principal y notas o feedback breve.
+              </div>
+            </div>
+            <div class="ratio-meta">
+              Anchura: 100% · Altura ≈ 133% del ancho
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- 2:3 -->
       <section class="screen" data-screen="2-3">
         <div class="screen-header">
@@ -562,6 +617,7 @@
         <button class="nav-btn active" data-target="16-9">16:9</button>
         <button class="nav-btn" data-target="1-1">1:1</button>
         <button class="nav-btn" data-target="4-5">4:5</button>
+        <button class="nav-btn" data-target="3-4">3:4</button>
         <button class="nav-btn" data-target="2-3">2:3</button>
         <button class="nav-btn" data-target="9-16">9:16</button>
       </div>
